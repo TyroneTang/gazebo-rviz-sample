@@ -1,0 +1,35 @@
+services:
+  devcontainer:
+    container_name: ros2-gazebo
+    image: ros2-humble-base:dev
+    working_dir: /workspace/project
+    user: devuser
+    network_mode: host
+    ipc: host
+    tty: true
+    stdin_open: true
+    privileged: true
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      DISPLAY: ${DISPLAY}
+      WAYLAND_DISPLAY: ${WAYLAND_DISPLAY:-}
+      XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-/tmp}
+      PULSE_SERVER: ${PULSE_SERVER:-}
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      QT_X11_NO_MITSHM: "1"
+      ROS_DOMAIN_ID: "0"
+      RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+      HOME: /workspace
+    volumes:
+      # Project source — host repo root mounted at /workspace/project
+      - ..:/workspace/project:cached
+      # WSLg / X11 / Wayland for GUI apps (rviz2, gazebo)
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      - /usr/lib/wsl:/usr/lib/wsl
+      # Host config passthrough (optional — comment out if not on your machine)
+      - ${HOME}/.gitconfig:/workspace/.gitconfig
+      - ${HOME}/.ssh:/workspace/.ssh:ro
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
