@@ -44,7 +44,9 @@ ARG USER_GID=1000
 RUN groupadd --gid ${USER_GID} ${USERNAME} \
     && useradd --uid ${USER_UID} --gid ${USER_GID} -m -d /workspace -s /bin/bash ${USERNAME} \
     && mkdir -p /workspace/project /workspace/install /workspace/build /workspace/log \
-                /workspace/.cache /workspace/.local /workspace/.config \
+                /workspace/.cache /workspace/.local /workspace/.ros /workspace/.config \
+                /tmp/runtime-devuser \
+    && chmod 700 /tmp/runtime-devuser \
     && chown -R ${USERNAME}:${USERNAME} /workspace \
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME}
@@ -60,4 +62,10 @@ RUN printf '%s\n' \
 
 ENV HOME=/workspace
 USER ${USERNAME}
+
+RUN rosdep update
+
 WORKDIR /workspace/project
+
+ENV USER=devuser
+ENV XDG_RUNTIME_DIR=/tmp/runtime-devuser
