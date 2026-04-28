@@ -30,6 +30,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            "validator_node = sim_bringup.validator_node:main"
         ],
     },
 )

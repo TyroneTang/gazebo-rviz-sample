@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
-from launch.launch_description_source import LaunchDescriptionSource
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -23,7 +23,7 @@ def generate_launch_description() -> None:
     )
 
     gazebo = IncludeLaunchDescription(
-        LaunchDescriptionSource(
+        PythonLaunchDescriptionSource(
             PathJoinSubstitution([pkg_ros_gz_sim, "launch", "gz_sim.launch.py"])
         ),
         launch_arguments={"gz_args": "-r -v 3 empty.sdf"}.items()
@@ -36,7 +36,7 @@ def generate_launch_description() -> None:
         parameters=[{
             "use_sim_time": use_sim_time,
             "robot_description": ParameterValue(
-                Command(["xacro", urdf_path], value_type=str)
+                Command(["xacro ", urdf_path]), value_type=str
             )
         }]
     )
@@ -52,6 +52,7 @@ def generate_launch_description() -> None:
         ]
     )
 
+    # bridge between gz.msgs with Ros2 msgs
     bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -61,6 +62,8 @@ def generate_launch_description() -> None:
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
             '/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
             '/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
+            # add this for validator
+            "/model/simple_bot/pose@geometry_msgs/msg/Pose[gz.msgs.Pose"
         ],
         parameters=[{"use_sim_time": use_sim_time}],
     )
@@ -73,6 +76,13 @@ def generate_launch_description() -> None:
         output='screen',
     )
 
+    validator_node = Node(
+        package="sim_bringup",
+        executable="validator_node",
+        name="validator_node",
+        output="screen",
+    )
+
     return LaunchDescription([
         declare_sim_time,
         gazebo,
@@ -80,4 +90,5 @@ def generate_launch_description() -> None:
         spawn_robot,
         bridge,
         rviz,
+        validator_node
     ])
