@@ -71,7 +71,9 @@
   <!-- ttaches the Ignition diff-drive plugin. 
    subscribes to cmd_vel (in Gazebo) and publishes odom and tf (in Gazebo). 
    own bridge forwards those into ROS. -->
-  <gazebo>
+   <!-- by default stationary. -->
+  <!-- /cmd_vel => [plugin] => /odom -->
+   <gazebo>
     <plugin filename="ignition-gazebo-diff-drive-system"
             name="ignition::gazebo::systems::DiffDrive">
       <left_joint>left_wheel_joint</left_joint>

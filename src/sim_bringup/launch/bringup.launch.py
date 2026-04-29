@@ -8,11 +8,14 @@ from launch_ros.substitutions import FindPackageShare
 
 
 
-def generate_launch_description() -> None:
+def generate_launch_description() -> LaunchDescription:
     # find this package as base relative/abs dir
+
+    # entrypoint for the simbringup package.
     pkg_share = FindPackageShare("sim_bringup")
     pkg_ros_gz_sim = FindPackageShare("ros_gz_sim")
 
+    # find folders in pkg share
     urdf_path = PathJoinSubstitution([pkg_share, "description", "simple_bot.urdf"])
     rviz_config = PathJoinSubstitution([pkg_share, "rviz", "default.rviz"])
 
@@ -47,6 +50,7 @@ def generate_launch_description() -> None:
         output="screen",
         arguments=[
             "-topic", "/robot_description",
+            # should match description.urdf.
             "-name", "simple_bot",
             "-z", "0.1",
         ]

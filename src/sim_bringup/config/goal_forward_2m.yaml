@@ -1,0 +1,14 @@
+validator_node:
+  ros__parameters:
+    target_x: 2.0
+    target_y: 0.0
+    tolerance: 0.3
+    timeout_sec: 15.0
+
+driver_node:
+  ros__parameters:
+    linear_x: 0.3
+    linear_y: 0.0
+    angular_z: 0.0
+    duration_sec: 10.0
+    publishing_rate_hz: 5.0

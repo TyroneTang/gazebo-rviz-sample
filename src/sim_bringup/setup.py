@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = 'sim_bringup'
+package_name = "sim_bringup"
 
 setup(
     name=package_name,
@@ -15,7 +15,8 @@ setup(
         # all paths are relative to within the package. this is  'sim_bringup'
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
         (os.path.join("share", package_name, "rviz"), glob("rviz/*.rviz")),
-        (os.path.join("share", package_name, "description"), glob("description/*"))
+        (os.path.join("share", package_name, "description"), glob("description/*")),
+        (os.path.join("share", package_name, "config"), glob("config/*.yaml")),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -30,7 +31,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            "validator_node = sim_bringup.validator_node:main"
+            "validator_node = sim_bringup.validator_node:main",
+            "driver_node = sim_bringup.driver:main"
         ],
-    },
+    }
 )
