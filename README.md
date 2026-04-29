@@ -7,4 +7,4 @@ Run GUI simulation: `ros2 launch sim_bringup bringup.launch.py`
 
 
 ### Demo
-![YT Demo, unlinked](https://youtu.be/yW1OjRa3ZF0)
+[YT Demo, unlinked](https://youtu.be/yW1OjRa3ZF0)
